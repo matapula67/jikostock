@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="sw"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JikoStock - Stock na Mauzo ya Jikoni</title>
+<meta name="description" content="JikoStock - rekodi stock na mauzo ya jikoni kwa wauzaji wa vyakula na vinywaji">
+<meta name="theme-color" content="#0f4c5c">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<style>
+:root{--bg:#f6f4ef;--card:#fff;--tx:#12303b;--mu:#66808a;--pr:#0f4c5c;--ac:#f2a81d;--bd:#dfe5e6;--ok:#1f8a5b;--bad:#c0392b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1e26;--card:#12303b;--tx:#eef3f4;--mu:#9bb3ba;--pr:#f2a81d;--bd:#24444f}}
+:root[data-theme="dark"]{--bg:#0b1e26;--card:#12303b;--tx:#eef3f4;--mu:#9bb3ba;--pr:#f2a81d;--bd:#24444f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--card);border-bottom:3px solid var(--ac)}
+h1{font-size:18px;margin:0;color:var(--pr)}h2{font-size:16px;margin:0 0 10px;color:var(--pr)}
+main{max-width:1100px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:16px}
+button,select,input{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:7px 10px}
+button{cursor:pointer}button.p{background:var(--pr);color:#fff;border-color:var(--pr)}
+:root[data-theme="dark"] button.p{color:#0b1e26}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.p{color:#0b1e26}}
+button.a{background:var(--ac);color:#12303b;border-color:var(--ac);font-weight:600}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:900px}
+th{background:var(--pr);color:#fff;text-align:left;padding:7px;font-size:13px;white-space:nowrap}
+:root[data-theme="dark"] th{color:#0b1e26}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) th{color:#0b1e26}}
+td{padding:3px;border-bottom:1px solid var(--bd)}td input{width:100%;min-width:64px;padding:5px}
+td.c{font-weight:600;text-align:right;padding:5px 8px;white-space:nowrap}
+tfoot td{font-weight:700;padding:7px}
+.auth{max-width:340px;margin:8vh auto}.auth input{width:100%;margin-bottom:8px}
+.tabs button.on{background:var(--ac);color:#12303b;border-color:var(--ac);font-weight:600}
+.row{display:grid;grid-template-columns:130px 1fr 90px;gap:8px;align-items:center;margin:6px 0}
+.b{height:14px;background:var(--pr);border-radius:4px;min-width:2px}.top{background:var(--ac)}
+.mu{color:var(--mu);font-size:13px}.err{color:var(--bad);font-size:13px}.toast{color:var(--ok);font-size:13px}
+.row2{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd)}.b.low{background:var(--bad)}li{margin:4px 0}
+.ban{background:var(--ac);color:#12303b;padding:8px 10px;border-radius:6px;margin-bottom:10px;font-weight:600}
+.pw{position:relative}.pw .eye{position:absolute;right:4px;top:3px;border:0;background:transparent;padding:6px 8px}
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script></head><body>
+<header><h1 id="ttl"></h1><div class="bar" style="margin:0">
+<select id="lg"><option value="sw">Kiswahili</option><option value="en">English</option></select>
+<button id="th"></button><span id="who" class="mu"></span><button id="out" style="display:none"></button></div></header>
+<main id="app"></main>
+<script>
+const T={sw:{app:"JikoStock",login:"Ingia",reg:"Jisajili",user:"Jina la mtumiaji",pass:"Nenosiri",noacc:"Huna akaunti? Jisajili",hasacc:"Una akaunti? Ingia",out:"Toka",bad:"Jina au nenosiri si sahihi",exists:"Jina limeshatumika",short:"Jaza jina na nenosiri (angalau herufi 4)",sheet:"Sheet ya Stock",add:"+ Ongeza safu",save:"Hifadhi",saved:"Imehifadhiwa ✓",dsheet:"Pakua Sheet",dreport:"Pakua Ripoti (PDF)",date:"Tarehe",debt:"Debt",system:"System",item:"Bidhaa",open:"Open",in:"In",total:"Total",sales:"Sales",closing:"Closing",loss:"Loss",profit:"Profit",price:"Bei",cost:"Gharama",report:"Ripoti ya Mauzo",day:"Siku",week:"Wiki",month:"Mwezi",top:"Inayouzika zaidi",none:"Hakuna data kwa kipindi hiki",qty:"Idadi",del:"Futa",theme:"Mode",foot:"Jumla",saves:"Hifadhi Zangu",sname:"Jina la hifadhi",open2:"Fungua",nosaves:"Bado hujahifadhi sheet yoyote",rows:"safu",prog:"Maendeleo ya Mauzo",best:"Bidhaa zilizouzika zaidi",least:"Bidhaa zilizouzika kidogo",recs:"Mapendekezo",sum:"Muhtasari",tq:"Jumla ya mauzo (idadi)",tp:"Faida jumla",avg:"Wastani wa mauzo kwa siku",gen:"Imetengenezwa",allsaves:"Rekodi za Watumiaji Wote",edit:"Hariri",editing:"Unahariri rekodi",back:"Rudi kwenye sheet yangu",combined:"Ripoti ya rekodi zote (kusoma tu)",allusers:"Watumiaji wote",allrep:"Ripoti ya wote",savechg:"Hifadhi mabadiliko",all:"Wote",err:"Hitilafu, jaribu tena",asuser:"Mtumiaji",asadmin:"Admin",code:"Msimbo wa admin",badcode:"Msimbo wa admin si sahihi",role:"Akaunti hii si ya aina uliyochagua (Mtumiaji/Admin)",noserver:"Server haipatikani. Usifungue faili moja kwa moja: tumia link ya deploy (Vercel/Render) au endesha npm start kisha fungua http://localhost:3000",lang:"sw"},
+en:{app:"JikoStock",login:"Sign in",reg:"Register",user:"Username",pass:"Password",noacc:"No account? Register",hasacc:"Have an account? Sign in",out:"Sign out",bad:"Wrong username or password",exists:"Username already taken",short:"Enter a username and a password (min 4 chars)",sheet:"Stock Sheet",add:"+ Add row",save:"Save",saved:"Saved ✓",dsheet:"Download Sheet",dreport:"Download Report (PDF)",date:"Date",debt:"Debt",system:"System",item:"Item",open:"Open",in:"In",total:"Total",sales:"Sales",closing:"Closing",loss:"Loss",profit:"Profit",price:"Price",cost:"Cost",report:"Sales Report",day:"Day",week:"Week",month:"Month",top:"Best seller",none:"No data for this period",qty:"Qty",del:"Delete",theme:"Mode",foot:"Totals",saves:"My Saved Sheets",sname:"Save name",open2:"Open",nosaves:"No saved sheets yet",rows:"rows",prog:"Sales Progress",best:"Best-selling items",least:"Least-selling items",recs:"Recommendations",sum:"Summary",tq:"Total sales (qty)",tp:"Total profit",avg:"Average sales per day",gen:"Generated",allsaves:"All Users' Records",edit:"Edit",editing:"Editing record",back:"Back to my sheet",combined:"Combined report of all records (read-only)",allusers:"All users",allrep:"Report for all",savechg:"Save changes",all:"All",err:"Error, try again",asuser:"User",asadmin:"Admin",code:"Admin code",badcode:"Wrong admin code",role:"This account is not of the selected type (User/Admin)",noserver:"Server not reachable. Do not open the file directly: use the deployed link (Vercel/Render) or run npm start and open http://localhost:3000",lang:"en"}};
+const ICON="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2064%2064%22%3E%3Crect%20width=%2264%22%20height=%2264%22%20rx=%2214%22%20fill=%22%230f4c5c%22/%3E%3Cpath%20d=%22M14%2031h36v9a12%2012%200%200%201-12%2012H26a12%2012%200%200%201-12-12z%22%20fill=%22%23f2a81d%22/%3E%3Crect%20x=%229%22%20y=%2226%22%20width=%2246%22%20height=%227%22%20rx=%223.5%22%20fill=%22%23f2a81d%22/%3E%3Cpath%20d=%22M26%2020c0-4%204-4%204-9M36%2020c0-4%204-4%204-9%22%20stroke=%22%23fff%22%20stroke-width=%223%22%20fill=%22none%22%20stroke-linecap=%22round%22/%3E%3C/svg%3E";
+const mem={};
+const S={get(k){try{return localStorage.getItem(k)}catch(e){return mem[k]??null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){mem[k]=v}}};
+let L=S.get("sk_lang")||"sw",tok=S.get("sk_token")||"",user=null,role="user",rows=[],per="day",rdate=today(),mode="login",arole="user",uval="",msg="",tm,sname="",ctx={type:"own"},saves=[],ufilter="";
+const t=k=>T[L][k],$=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const n=v=>parseFloat(v)||0;
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+const calc=r=>{const tot=n(r.open)+n(r.inn);return{tot,cl:tot-n(r.sales)}};
+const blank=()=>({date:today(),debt:"",item:"",open:"",inn:"",sales:"",system:""});
+async function api(p,m="GET",b){let r;try{if(location.protocol=="file:")throw 0;r=await fetch("/api"+p,{method:m,headers:{"Content-Type":"application/json",...(tok?{Authorization:"Bearer "+tok}:{})},body:b?JSON.stringify(b):undefined})}catch(e){const x=new Error("noserver");x.code="noserver";throw x}
+ const j=await r.json().catch(()=>null);if(!r.ok||j===null){const e=new Error("api");e.code=(j&&j.error)||"noserver";e.status=r.status;throw e}return j}
+const isAdmin=()=>role=="admin";
+const who=()=>ctx.type=="rec"?ctx.owner:ctx.type=="all"?(ufilter||t("all")):user;
+async function load(){try{rows=(await api("/sheet")).rows}catch(e){rows=[]}if(!rows||!rows.length)rows=[blank()];ctx={type:"own"}}
+function toast(){const e=$("ts");if(e){e.textContent=t("saved");clearTimeout(tm);tm=setTimeout(()=>e.textContent="",2000)}}
+function persist(show){if(ctx.type!="own")return;api("/sheet","PUT",{rows}).then(()=>{if(show)toast()}).catch(e=>{if(e.status==401)logout()})}
+function logout(){tok="";user=null;role="user";S.set("sk_token","");ctx={type:"own"};render()}
+
+function chrome(){document.documentElement.lang=L;$("ttl").innerHTML=`<img src="${ICON}" width="28" height="28" alt="" style="vertical-align:middle;margin-right:8px;border-radius:6px">`+t("app");$("th").textContent="◐ "+t("theme");$("lg").value=L;$("out").textContent=t("out");$("out").style.display=user?"":"none";$("who").textContent=user?"👤 "+user+(isAdmin()?" (admin)":""):""}
+function render(){chrome();user?sheetView():authView()}
+
+function authView(){
+ $("app").innerHTML=`<div class="card auth"><h2><img src="${ICON}" width="28" height="28" alt="" style="vertical-align:middle;margin-right:8px;border-radius:6px">${t("app")}</h2>
+ <div class="bar tabs"><button data-r="user" class="${arole=="user"?"on":""}">👤 ${t("asuser")}</button><button data-r="admin" class="${arole=="admin"?"on":""}">🛡 ${t("asadmin")}</button></div>
+ <div class="bar tabs"><button data-m="login" class="${mode=="login"?"on":""}">${t("login")}</button><button data-m="reg" class="${mode=="reg"?"on":""}">${t("reg")}</button></div>
+ <input id="u" value="${esc(uval)}" placeholder="${t("user")}" autocomplete="username"><div class="pw"><input id="p" type="password" placeholder="${t("pass")}" autocomplete="current-password"><button type="button" class="eye" data-e="p">👁</button></div>${mode=="reg"&&arole=="admin"?`<div class="pw"><input id="ac" type="password" placeholder="${t("code")}"><button type="button" class="eye" data-e="ac">👁</button></div>`:""}<div class="err">${msg}</div><button class="p" id="go" style="width:100%;margin-top:8px">${t(mode)} - ${t(arole=="admin"?"asadmin":"asuser")}</button></div>`;
+ document.querySelectorAll("[data-r],[data-m]").forEach(b=>b.onclick=()=>{uval=$("u").value;if(b.dataset.r)arole=b.dataset.r;if(b.dataset.m)mode=b.dataset.m;msg="";authView()});
+ document.querySelectorAll(".eye").forEach(b=>b.onclick=()=>{const i=$(b.dataset.e);i.type=i.type=="password"?"text":"password";b.textContent=i.type=="password"?"👁":"🙈"});
+ $("go").onclick=async()=>{const u=$("u").value.trim().toLowerCase(),p=$("p").value;uval=u;if(!u||p.length<4){msg=t("short");return authView()}
+  try{const r=await api(mode=="reg"?"/register":"/login","POST",{username:u,password:p,role:arole,code:$("ac")?$("ac").value:""});tok=r.token;S.set("sk_token",tok);user=r.user.username;role=r.user.role;msg="";await load();render()}
+  catch(e){msg=t(e.code)||t("err");authView()}};
+}
+const fname=x=>String(x).replace(/[^\w\-]+/g,"_").slice(0,40)||"sheet";
+function sheetCsv(rs){return csv([[t("date"),t("item"),t("open"),t("in"),t("total"),t("sales"),t("closing"),t("system"),t("debt")],...rs.map(r=>{const c=calc(r);return[r.date,r.item,n(r.open),n(r.inn),c.tot,n(r.sales),c.cl,n(r.system),n(r.debt)]})])}
+function ctxBanner(){if(ctx.type=="rec")return`<div class="ban">✏️ ${t("editing")}: <b>${esc(ctx.name)}</b> (${esc(ctx.owner)}) <button id="bk">${t("back")}</button></div>`;if(ctx.type=="all")return`<div class="ban">📊 ${t("combined")}${ufilter?" - "+esc(ufilter):""} <button id="bk">${t("back")}</button></div>`;return""}
+async function onSave(){
+ try{if(ctx.type=="rec"){await api("/saves/"+ctx.id,"PUT",{rows,name:sname||ctx.name})}else{await api("/saves","POST",{name:sname,rows});persist()}toast();savesView()}catch(e){if(e.status==401)logout();else alert(t("err"))}}
+async function savesView(){let a=[];try{a=(await api("/saves")).saves}catch(e){if(e.status==401)return logout()}saves=a;
+ const us=[...new Set(a.map(s=>s.owner))],f=isAdmin()&&ufilter?a.filter(s=>s.owner==ufilter):a;
+ const bar=isAdmin()?`<div class="bar"><select id="uf"><option value="">${t("allusers")}</option>${us.map(u=>`<option ${u==ufilter?"selected":""}>${esc(u)}</option>`).join("")}</select><button class="a" id="allr">${t("allrep")}</button></div>`:"";
+ $("sl").innerHTML=bar+(f.length?f.map(s=>`<div class="row2"><div><b>${esc(s.name)}</b>${isAdmin()?` <span class="mu">· ${esc(s.owner)}</span>`:""}${s.editedBy?` <span class="mu">· ✎ ${esc(s.editedBy)}</span>`:""}<div class="mu">${new Date(s.ts).toLocaleString()} · ${s.rows.length} ${t("rows")}</div></div><div class="bar" style="margin:0"><button data-o="${s.id}">${isAdmin()?t("edit"):t("open2")}</button><button data-c="${s.id}">CSV</button>${isAdmin()?`<button data-x="${s.id}">${t("del")}</button>`:""}</div></div>`).join(""):`<p class="mu">${t("nosaves")}</p>`);
+ if(isAdmin()){$("uf").onchange=e=>{ufilter=e.target.value;savesView()};$("allr").onclick=()=>{ctx={type:"all"};rows=f.flatMap(s=>s.rows);sheetView()}}
+ $("sl").onclick=async e=>{const d=e.target.dataset,g=id=>saves.find(s=>s.id==id);
+  if(d.o){const s=g(d.o);rows=JSON.parse(JSON.stringify(s.rows));if(!rows.length)rows=[blank()];sname=s.name;if(isAdmin())ctx={type:"rec",id:s.id,owner:s.owner,name:s.name};else{ctx={type:"own"};persist()}sheetView()}
+  else if(d.c){const s=g(d.c);dl(fname(s.owner+"_"+s.name)+".csv",sheetCsv(s.rows))}
+  else if(d.x){try{await api("/saves/"+d.x,"DELETE");savesView()}catch(er){}}}}
+function sheetView(){
+ const cols=["date","item","open","in","total","sales","closing","system","debt"];
+ $("app").innerHTML=`<div class="card"><h2>${t("sheet")}</h2>${ctxBanner()}<div class="bar"><button class="a" id="add">${t("add")}</button><input id="sn" placeholder="${t("sname")}" value="${esc(sname)}"><button class="p" id="sv">${t("save")}</button><button id="ds">${t("dsheet")}</button><span class="toast" id="ts"></span></div><div class="wrap"><table><thead><tr>${cols.map(c=>`<th>${t(c)}</th>`).join("")}<th></th></tr></thead><tbody id="tb"></tbody><tfoot><tr><td colspan="2">${t("foot")}</td><td class="c" id="f-open"></td><td class="c" id="f-inn"></td><td class="c" id="f-tot"></td><td class="c" id="f-sales"></td><td class="c" id="f-cl"></td><td class="c" id="f-sys"></td><td class="c" id="f-debt"></td><td></td></tr></tfoot></table></div></div>
+ <div class="card"><h2>${isAdmin()?t("allsaves"):t("saves")}</h2><div id="sl"></div></div>
+ <div class="card"><h2>${t("report")}</h2><div class="bar tabs"><button data-p="day">${t("day")}</button><button data-p="week">${t("week")}</button><button data-p="month">${t("month")}</button><input type="date" id="rd" value="${rdate}"><button class="a" id="dr">${t("dreport")}</button></div><div id="rep"></div></div>`;
+ const tb=$("tb");tb.innerHTML=rows.map((r,i)=>{const x=(f,ty="text")=>`<td><input data-i="${i}" data-f="${f}" type="${ty}" ${ty=="number"?'step="any"':""} value="${esc(r[f])}"></td>`;
+  return`<tr>${x("date","date")}${x("item")}${x("open","number")}${x("inn","number")}<td class="c" id="t${i}"></td>${x("sales","number")}<td class="c" id="c${i}"></td>${x("system","number")}${x("debt","number")}<td><button data-d="${i}" title="${t("del")}">✕</button></td></tr>`}).join("");
+ tb.oninput=e=>{const i=e.target.dataset.i;if(i==null)return;rows[+i][e.target.dataset.f]=e.target.value;upd(+i);autosave()};
+ tb.onclick=e=>{const d=e.target.dataset.d;if(d==null)return;rows.splice(+d,1);if(!rows.length)rows.push(blank());persist();sheetView()};
+ $("add").onclick=()=>{rows.push(blank());persist();sheetView()};
+ $("sn").oninput=e=>sname=e.target.value;
+ $("sv").onclick=onSave;if(ctx.type=="rec")$("sv").textContent=t("savechg");
+ $("ds").onclick=()=>dl("stock-sheet.csv",sheetCsv(rows));
+ document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{per=b.dataset.p;repView()});
+ $("rd").onchange=e=>{rdate=e.target.value||today();repView()};
+ $("dr").onclick=pdf;
+ if($("bk"))$("bk").onclick=async()=>{await load();sname="";sheetView()};
+ if(ctx.type=="all"){tb.querySelectorAll("input").forEach(i=>i.readOnly=true);tb.querySelectorAll("button").forEach(b=>b.style.display="none");["add","sv","sn"].forEach(i=>$(i).style.display="none")}
+ rows.forEach((r,i)=>upd(i,true));totals();savesView();repView();
+}
+let st;function autosave(){clearTimeout(st);st=setTimeout(()=>persist(),400)}
+function upd(i,skip){const c=calc(rows[i]);$("t"+i).textContent=c.tot;const e=$("c"+i);e.textContent=c.cl;e.style.color=c.cl<0?"var(--bad)":"";if(!skip){totals();repView()}}
+function totals(){const s=f=>rows.reduce((a,r)=>a+n(r[f]),0);const cs=rows.map(calc);const set=(id,v)=>$(id).textContent=v;
+ set("f-sys",s("system"));set("f-debt",s("debt"));set("f-open",s("open"));set("f-inn",s("inn"));set("f-tot",cs.reduce((a,c)=>a+c.tot,0));set("f-sales",s("sales"));set("f-cl",cs.reduce((a,c)=>a+c.cl,0));}
+function inRange(d){if(!d)return false;if(per=="day")return d===rdate;if(per=="month")return d.slice(0,7)===rdate.slice(0,7);const a=Date.parse(d+"T00:00:00Z"),b=Date.parse(rdate+"T00:00:00Z"),k=(b-a)/864e5;return k>=0&&k<=6}
+function agg(){const m={};[...rows].sort((x,y)=>(x.date||"").localeCompare(y.date||"")).forEach(r=>{const k=(r.item||"").trim();if(!k||!inRange(r.date))return;const c=calc(r),z=k.toLowerCase(),o=m[z]=m[z]||{k,q:0,tot:0,cl:0};o.q+=n(r.sales);o.tot+=c.tot;o.cl=c.cl});return Object.values(m).sort((x,y)=>y.q-x.q)}
+function daily(){const m={};rows.forEach(r=>{if(!inRange(r.date)||!(r.item||"").trim())return;const c=calc(r);m[r.date]=m[r.date]||{d:r.date,q:0};m[r.date].q+=n(r.sales)});return Object.values(m).sort((x,y)=>x.d.localeCompare(y.d))}
+const fmt=v=>String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g,",");
+function recs(a,dd){const R=[],sw=L=="sw";if(!a.length)return R;const top=a[0],nl=Math.min(2,Math.floor(a.length/2)),low=a.slice(a.length-nl).reverse();
+ R.push(sw?`Ongeza stock ya ${top.k}: ndiyo inayouzika zaidi (${fmt(top.q)}). Hakikisha haiishi, hasa siku za mauzo makubwa.`:`Stock up on ${top.k}: it sells the most (${fmt(top.q)}). Make sure it never runs out, especially on busy days.`);
+ low.forEach(x=>R.push(sw?`Mauzo ya ${x.k} ni madogo (${fmt(x.q)}). Punguza kuagiza, au fanya promosheni/bei ya kuvutia isikae muda mrefu.`:`${x.k} sells slowly (${fmt(x.q)}). Order less, or run a promotion so it does not sit too long.`));
+ a.filter(x=>x.cl>0&&x.cl>x.q*2).slice(0,3).forEach(x=>R.push(sw?`Stock ya ${x.k} inabaki nyingi (closing ${fmt(x.cl)} dhidi ya mauzo ${fmt(x.q)}). Punguza order ijayo.`:`${x.k} is overstocked (closing ${fmt(x.cl)} vs sales ${fmt(x.q)}). Reduce the next order.`));
+ a.filter(x=>x.q>0&&x.cl<x.q*.25).slice(0,3).forEach(x=>R.push(sw?`Stock ya ${x.k} inaisha (closing ${fmt(x.cl)}). Agiza mapema.`:`${x.k} is running low (closing ${fmt(x.cl)}). Reorder early.`));
+ if(dd.length>=2){const h=Math.floor(dd.length/2),f=dd.slice(0,h).reduce((s,x)=>s+x.q,0)/h,g=dd.slice(h).reduce((s,x)=>s+x.q,0)/(dd.length-h);
+  R.push(g>f*1.1?(sw?"Mauzo yanapanda ukilinganisha mwanzo na mwisho wa kipindi. Dumisha kinachofanya kazi na hakikisha stock inatosha.":"Sales are rising from the start to the end of the period. Keep doing what works and keep stock sufficient."):g<f*.9?(sw?"Mauzo yanashuka ukilinganisha mwanzo na mwisho wa kipindi. Angalia sababu (bei, ubora, ushindani) na jaribu promosheni.":"Sales are falling from the start to the end of the period. Check the cause (price, quality, competition) and try a promotion."):(sw?"Mauzo yako thabiti katika kipindi hiki.":"Sales are stable over this period."))}
+ return R.slice(0,10)}
+function repView(){document.querySelectorAll("[data-p]").forEach(b=>b.classList.toggle("on",b.dataset.p==per));
+ const a=agg(),dd=daily();if(!a.length){$("rep").innerHTML=`<p class="mu">${t("none")}</p>`;return}
+ const mx=Math.max(a[0].q,1),nl=Math.min(2,Math.floor(a.length/2));
+ $("rep").innerHTML=`<p>🏆 ${t("top")}: <b>${esc(a[0].k)}</b> (${a[0].q})</p>`+a.map((x,i)=>`<div class="row"><span>${esc(x.k)}</span><div><div class="b ${i==0?"top":i>=a.length-nl?"low":""}" style="width:${Math.max(x.q/mx*100,1)}%"></div></div><span class="mu">${x.q}</span></div>`).join("")+`<h2 style="margin-top:14px">${t("recs")}</h2><ul>${recs(a,dd).map(s=>`<li>${esc(s)}</li>`).join("")}</ul>`}
+async function pdf(){
+ const J=window.jspdf&&window.jspdf.jsPDF;if(!J){alert("PDF library haijapakia / PDF library not loaded");return}
+ const a=agg(),dd=daily(),R=recs(a,dd),d=new J({unit:"mm",format:"a4"}),W=210,M=15;let y=0;
+ const nl=Math.min(5,Math.floor(a.length/2)),best=a.slice(0,5),least=a.slice(a.length-nl).reverse();
+ const pg=h=>{if(y+h>282){d.addPage();y=20}};
+ const H=s=>{pg(16);y+=4;d.setFont("helvetica","bold");d.setFontSize(13);d.setTextColor(15,76,92);d.text(s,M,y);y+=2;d.setDrawColor(242,168,29);d.setLineWidth(.6);d.line(M,y,M+40,y);y+=7;d.setTextColor(30,30,30)};
+ const P=(s,sz=10,b=false)=>{d.setFont("helvetica",b?"bold":"normal");d.setFontSize(sz);d.setTextColor(30,30,30);d.splitTextToSize(s,W-2*M).forEach(l=>{pg(6);d.text(l,M,y);y+=5.5})};
+ const tbl=it=>{pg(14);d.setFillColor(15,76,92);d.rect(M,y-4,W-2*M,6,"F");d.setTextColor(255,255,255);d.setFont("helvetica","bold");d.setFontSize(9);d.text(t("item"),M+2,y);d.text(t("qty"),M+130,y);y+=6;d.setTextColor(30,30,30);d.setFont("helvetica","normal");it.forEach((x,i)=>{pg(6);if(i%2){d.setFillColor(243,245,246);d.rect(M,y-4,W-2*M,6,"F")}d.text(String(x.k).slice(0,45),M+2,y);d.text(fmt(x.q),M+130,y);y+=6});y+=2};
+ const lbl=per=="day"?rdate:per=="month"?rdate.slice(0,7):new Date(Date.parse(rdate+"T00:00:00Z")-6*864e5).toISOString().slice(0,10)+" - "+rdate;
+ d.setFillColor(15,76,92);d.rect(0,0,W,28,"F");d.setFillColor(242,168,29);d.rect(0,28,W,1.5,"F");
+ d.setTextColor(255,255,255);d.setFont("helvetica","bold");d.setFontSize(17);d.text(t("report")+" - "+t(per),M,13);
+ d.setFont("helvetica","normal");d.setFontSize(10);d.text(t("app")+" | "+who()+" | "+lbl,M,21);y=38;
+ if(!a.length){P(t("none"))}else{
+  const tq=a.reduce((s,x)=>s+x.q,0);
+  H(t("sum"));P(t("tq")+": "+fmt(tq),10,true);P(t("avg")+": "+fmt(tq/Math.max(dd.length,1)));P(t("top")+": "+a[0].k+" ("+fmt(a[0].q)+")");
+  H(t("prog"));const mx=Math.max(...dd.map(x=>x.q),1);
+  dd.forEach(x=>{pg(7);d.setFont("helvetica","normal");d.setFontSize(9);d.setTextColor(30,30,30);d.text(x.d,M,y);const w=Math.max(x.q/mx*90,.8);d.setFillColor(15,76,92);d.rect(M+26,y-3.5,w,4.5,"F");d.text(fmt(x.q),M+26+w+2,y);y+=6.5});
+  H(t("best"));tbl(best);
+  if(nl){H(t("least"));tbl(least)}
+  H(t("recs"));R.forEach((s,i)=>P((i+1)+". "+s));}
+ const N=d.getNumberOfPages();for(let i=1;i<=N;i++){d.setPage(i);d.setFontSize(8);d.setTextColor(120,120,120);d.text(t("gen")+": "+today()+"   |   "+i+"/"+N,M,290)}
+ dl("sales-report-"+per+"-"+rdate+".pdf",d.output("arraybuffer"));
+}
+function csv(a){return"\ufeff"+a.map(r=>r.map(v=>{v=String(v??"");return/[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(",")).join("\n")}
+async function dl(name,data){
+ try{const d=window.claude?await claude.use("downloads"):null;if(d){await d.save({filename:name,data});return}}catch(e){if(e&&e.code=="declined")return}
+ const ty=/\.pdf$/.test(name)?"application/pdf":"text/csv;charset=utf-8",b=new Blob([data],{type:ty}),u=URL.createObjectURL(b),a=document.createElement("a");
+ a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
+
+$("lg").onchange=e=>{L=e.target.value;S.set("sk_lang",L);render()};
+$("th").onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme=="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark";S.set("sk_theme",r.dataset.theme)};
+$("out").onclick=logout;
+{const th=S.get("sk_theme");if(th)document.documentElement.dataset.theme=th}
+(async()=>{if(tok){try{const m=await api("/me");user=m.username;role=m.role;await load()}catch(e){tok="";S.set("sk_token","")}}render()})();
+</script></body></html>
